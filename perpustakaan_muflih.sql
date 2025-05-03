@@ -1,8 +1,8 @@
 -- Buat database
-CREATE DATABASE perpustakaan_muflih;
+CREATE DATABASE phpus;
 
 -- Gunakan database tersebut
-USE perpustakaan_muflih;
+USE phpus;
 
 -- Tabel users
 CREATE TABLE users (
