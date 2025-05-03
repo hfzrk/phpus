@@ -1,0 +1,31 @@
+cd C:\xampp\htdocs
+mkdir perpustakaan_muflih
+cd perpustakaan_muflih
+
+:: Folder config dan file koneksi.php
+mkdir config
+echo.> config\koneksi.php
+
+:: Folder pages dan file login + dashboard
+mkdir pages
+echo.> pages\login.php
+echo.> pages\dashboard.php
+
+:: Folder buku dan file CRUD buku
+mkdir pages\buku
+echo.> pages\buku\list_buku.php
+echo.> pages\buku\tambah_buku.php
+echo.> pages\buku\edit_buku.php
+
+:: Folder user dan file list buku user
+mkdir pages\user
+echo.> pages\user\list_buku.php
+
+:: Folder assets (css dan js)
+mkdir assets
+mkdir assets\css
+mkdir assets\js
+
+:: File logout dan index
+echo.> logout.php
+echo.> index.php
