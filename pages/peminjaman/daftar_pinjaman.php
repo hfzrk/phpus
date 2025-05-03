@@ -82,189 +82,149 @@ $error_message = isset($_GET['error']) ? sanitize($_GET['error']) : '';
 mysqli_close($koneksi);
 ?>
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buku Dipinjam - Perpustakaan Muflih</title>
-    <!-- Menggunakan Bootstrap lokal -->
-    <link href="../../assets/bootstrap.css/css/theme.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <!-- Animate.css -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="../../css/pico.css">
+    <link rel="stylesheet" href="../../css/bootstrap-icons.css">
 </head>
 <body>
-    <div class="d-flex">
-        <!-- Sidebar -->
-        <nav class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px; min-height: 100vh;">
-            <a href="../../dashboard.php" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                <i class="bi bi-book-half me-2" style="font-size: 1.5rem;"></i>
-                <span class="fs-4">Perpus Muflih</span>
-            </a>
-            <hr>
-            <ul class="nav nav-pills flex-column mb-auto">
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="../../dashboard.php">
-                        <i class="bi bi-house-door-fill me-2"></i> Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a class="nav-link text-white" href="../buku/list_buku.php">
-                        <i class="bi bi-book-fill me-2"></i> Daftar Buku
-                    </a>
-                </li>
-                <li>
-                    <a class="nav-link text-white" href="pinjam_buku.php">
-                        <i class="bi bi-journal-arrow-down me-2"></i> Pinjam Buku
-                    </a>
-                </li>
-                <li>
-                    <a class="nav-link active text-white" href="daftar_pinjaman.php">
-                        <i class="bi bi-journal-bookmark-fill me-2"></i> Buku Dipinjam
-                    </a>
-                </li>
+    <div class="container">
+        <!-- Navbar -->
+        <nav>
+            <ul>
+                <li><strong>Perpus Muflih</strong></li>
             </ul>
-            <hr>
-            <div class="dropdown">
-                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-person-circle me-2"></i>
-                    <strong><?php echo sanitize($username); ?></strong>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                    <li><a class="dropdown-item" href="../../logout.php"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
-                </ul>
-            </div>
+            <ul>
+                <li><a href="../../dashboard.php"><i class="bi bi-house-door-fill"></i> Dashboard</a></li>
+                <li><a href="../buku/list_buku.php"><i class="bi bi-book-fill"></i> Buku</a></li>
+                <?php if ($role === 'admin'): ?>
+                <li><a href="../user/list_user.php"><i class="bi bi-people-fill"></i> User</a></li>
+                <?php else: ?>
+                <li><a href="pinjam_buku.php"><i class="bi bi-journal-arrow-down"></i> Pinjam</a></li>
+                <li><a href="daftar_pinjaman.php" aria-current="page"><i class="bi bi-journal-bookmark-fill"></i> Pinjaman</a></li>
+                <?php endif; ?>
+                <li><a href="../../logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+            </ul>
         </nav>
 
-        <!-- Content Area -->
-        <div class="content flex-grow-1 p-3">
-            <div class="container-fluid">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h2 class="animate__animated animate__fadeInLeft">
-                        <i class="bi bi-journal-bookmark-fill text-primary me-2"></i> Buku Dipinjam
-                    </h2>
-                </div>
-                <hr>
+        <main>
+            <article>
+                <header>
+                    <div class="grid">
+                        <h2><i class="bi bi-journal-bookmark-fill"></i> Daftar Buku Dipinjam</h2>
+                        <div>
+                            <a href="pinjam_buku.php" role="button"><i class="bi bi-journal-plus"></i> Pinjam Buku</a>
+                        </div>
+                    </div>
+                    <hr>
+                </header>
 
-                <?php if ($success_message): ?>
-                <div class="alert alert-success alert-dismissible fade show animate__animated animate__fadeInDown" role="alert">
-                    <?php echo $success_message; ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
+                <?php if (!empty($success_message)): ?>
+                    <div role="alert">
+                        <?php echo $success_message; ?>
+                    </div>
                 <?php endif; ?>
 
-                <?php if ($error_message): ?>
-                <div class="alert alert-danger alert-dismissible fade show animate__animated animate__fadeInDown" role="alert">
-                    <?php echo $error_message; ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                <?php endif; ?>
-
-                <div class="mb-3 animate__animated animate__fadeIn">
-                    <div class="btn-group" role="group">
-                        <a href="daftar_pinjaman.php?filter=all" class="btn btn-outline-primary <?php echo $filter === 'all' ? 'active' : ''; ?>">
-                            <i class="bi bi-grid-3x3-gap me-1"></i> Semua
-                        </a>
-                        <a href="daftar_pinjaman.php?filter=active" class="btn btn-outline-primary <?php echo $filter === 'active' ? 'active' : ''; ?>">
-                            <i class="bi bi-bookmark-check me-1"></i> Dipinjam
-                        </a>
-                        <a href="daftar_pinjaman.php?filter=returned" class="btn btn-outline-primary <?php echo $filter === 'returned' ? 'active' : ''; ?>">
-                            <i class="bi bi-bookmark-dash me-1"></i> Dikembalikan
-                        </a>
+                <?php if (!empty($error_message)): ?>
+                    <div role="alert" class="contrast">
+                        <?php echo $error_message; ?>
+                    </div>
+                <?php endif; ?>                <!-- Filter options -->
+                <div class="grid">
+                    <div>
+                        <div role="group">
+                            <a href="?filter=all" role="button" class="<?php echo $filter === 'all' ? 'primary' : 'outline secondary'; ?>">
+                                <i class="bi bi-grid-fill"></i> Semua
+                            </a>
+                            <a href="?filter=active" role="button" class="<?php echo $filter === 'active' ? 'primary' : 'outline secondary'; ?>">
+                                <i class="bi bi-hourglass-split"></i> Sedang Dipinjam
+                            </a>
+                            <a href="?filter=returned" role="button" class="<?php echo $filter === 'returned' ? 'primary' : 'outline secondary'; ?>">
+                                <i class="bi bi-check-circle-fill"></i> Sudah Dikembalikan
+                            </a>
+                        </div>
                     </div>
                 </div>
 
-                <div class="table-responsive animate__animated animate__fadeInUp">
-                    <table class="table table-striped table-bordered table-hover shadow-sm">
-                        <thead class="table-info">
+                <figure>
+                    <table role="grid">
+                        <thead>
                             <tr>
-                                <th>Judul</th>
-                                <th>Tanggal Pinjam</th>
-                                <th>Tanggal Kembali</th>
-                                <th>Status</th>
-                                <th>Sisa Waktu</th>
-                                <th class="text-center">Aksi</th>
+                                <th scope="col">Judul Buku</th>
+                                <th scope="col">Pengarang</th>
+                                <th scope="col">Genre</th>
+                                <th scope="col">Tanggal Pinjam</th>
+                                <th scope="col">Tanggal Kembali</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if (count($loans) > 0): ?>
-                                <?php foreach ($loans as $index => $loan): ?>
-                                <tr class="animate__animated animate__fadeIn" style="animation-delay: <?php echo $index * 0.05; ?>s">
+                                <?php foreach ($loans as $loan): ?>
+                                <tr>
                                     <td><?php echo sanitize($loan['judul']); ?></td>
-                                    <td><?php echo date('d/m/Y', strtotime($loan['tanggal_pinjam'])); ?></td>
-                                    <td><?php echo date('d/m/Y', strtotime($loan['tanggal_kembali'])); ?></td>
+                                    <td><?php echo sanitize($loan['pengarang']); ?></td>
+                                    <td><?php echo sanitize($loan['genre']); ?></td>
+                                    <td><?php echo sanitize($loan['tanggal_pinjam']); ?></td>
                                     <td>
+                                        <?php echo sanitize($loan['tanggal_kembali']); ?>
                                         <?php if ($loan['status'] === 'dipinjam'): ?>
-                                            <span class="badge bg-primary">Dipinjam</span>
-                                        <?php else: ?>
-                                            <span class="badge bg-success">Dikembalikan</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <?php if ($loan['status'] === 'dipinjam'): ?>
-                                            <?php if ($loan['days_remaining'] > 2): ?>
-                                                <span class="badge bg-success"><?php echo $loan['days_remaining']; ?> hari</span>
-                                            <?php elseif ($loan['days_remaining'] >= 0): ?>
-                                                <span class="badge bg-warning text-dark"><?php echo $loan['days_remaining']; ?> hari</span>
-                                            <?php else: ?>
-                                                <span class="badge bg-danger">Terlambat <?php echo abs($loan['days_remaining']); ?> hari</span>
+                                            <?php if ($loan['days_remaining'] < 0): ?>
+                                                <mark class="contrast"><i class="bi bi-exclamation-triangle-fill"></i> Terlambat <?php echo abs($loan['days_remaining']); ?> hari</mark>
+                                            <?php elseif ($loan['days_remaining'] <= 2): ?>
+                                                <mark class="secondary"><i class="bi bi-clock-fill"></i> <?php echo $loan['days_remaining']; ?> hari lagi</mark>
                                             <?php endif; ?>
-                                        <?php else: ?>
-                                            <span class="badge bg-secondary">-</span>
                                         <?php endif; ?>
                                     </td>
-                                    <td class="text-center">
+                                    <td>
                                         <?php if ($loan['status'] === 'dipinjam'): ?>
-                                            <a href="kembalikan_buku.php?id=<?php echo $loan['id']; ?>" class="btn btn-sm btn-success" onclick="return confirm('Apakah Anda yakin ingin mengembalikan buku: <?php echo addslashes(sanitize($loan['judul'])); ?>?');">
-                                                <i class="bi bi-arrow-return-left me-1"></i> Kembalikan
-                                            </a>
+                                            <mark class="tertiary">Dipinjam</mark>
                                         <?php else: ?>
-                                            <button class="btn btn-sm btn-secondary" disabled>
-                                                <i class="bi bi-check-circle me-1"></i> Sudah Kembali
-                                            </button>
+                                            <mark>Dikembalikan</mark>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <?php if ($loan['status'] === 'dipinjam'): ?>
+                                        <a href="kembalikan_buku.php?id=<?php echo $loan['id']; ?>" role="button" class="outline small" onclick="return confirm('Yakin ingin mengembalikan buku <?php echo addslashes(sanitize($loan['judul'])); ?>?');">
+                                            <i class="bi bi-arrow-left-circle-fill"></i> Kembalikan
+                                        </a>
+                                        <?php else: ?>
+                                        <button disabled class="outline small"><i class="bi bi-check-circle-fill"></i> Sudah Dikembalikan</button>
                                         <?php endif; ?>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="6" class="text-center">
-                                        <?php if ($filter === 'all'): ?>
-                                            Anda belum meminjam buku apapun.
-                                        <?php elseif ($filter === 'active'): ?>
-                                            Anda tidak memiliki buku yang sedang dipinjam.
-                                        <?php else: ?>
-                                            Anda belum pernah mengembalikan buku.
-                                        <?php endif; ?>
-                                    </td>
+                                    <td colspan="7" class="center">Tidak ada data pinjaman<?php echo $filter !== 'all' ? ' dengan filter tersebut' : ''; ?>.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
-                </div>
+                </figure>
 
                 <!-- Pagination Links -->
                 <?php if ($total_pages > 1): ?>
-                <nav aria-label="Page navigation" class="mt-4 d-flex justify-content-center animate__animated animate__fadeInUp">
-                    <ul class="pagination shadow-sm">
+                <nav aria-label="Page navigation">
+                    <ul>
                         <?php
-                        // Base URL for pagination links
-                        $base_url = "daftar_pinjaman.php?";
+                        // Base URL with filter parameter
+                        $base_url = "?";
                         if ($filter !== 'all') {
                             $base_url .= "filter=" . urlencode($filter) . "&";
                         }
                         $base_url .= "page=";
                         ?>
-
+                        
                         <!-- Previous Button -->
-                        <li class="page-item <?php echo ($current_page <= 1) ? 'disabled' : ''; ?>">
-                            <a class="page-link" href="<?php echo ($current_page <= 1) ? '#' : $base_url . ($current_page - 1); ?>" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
+                        <li <?php if ($current_page <= 1) echo 'aria-disabled="true"'; ?>>
+                            <a href="<?php echo ($current_page <= 1) ? '#' : $base_url . ($current_page - 1); ?>" <?php if ($current_page <= 1) echo 'aria-disabled="true" tabindex="-1"'; ?>>&laquo;</a>
                         </li>
 
-                        <!-- Page Number Links -->
                         <?php
                         // Determine the range of pages to display
                         $start_page = max(1, $current_page - 2);
@@ -272,17 +232,17 @@ mysqli_close($koneksi);
 
                         // Show first page and ellipsis if needed
                         if ($start_page > 1) {
-                            echo '<li class="page-item"><a class="page-link" href="' . $base_url . '1">1</a></li>';
+                            echo '<li><a href="' . $base_url . '1">1</a></li>';
                             if ($start_page > 2) {
-                                echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                                echo '<li aria-disabled="true"><a aria-disabled="true" tabindex="-1">...</a></li>';
                             }
                         }
 
                         // Loop through the page numbers
                         for ($i = $start_page; $i <= $end_page; $i++):
                         ?>
-                            <li class="page-item <?php echo ($i == $current_page) ? 'active' : ''; ?>">
-                                <a class="page-link" href="<?php echo $base_url . $i; ?>"><?php echo $i; ?></a>
+                            <li <?php if ($i == $current_page) echo 'aria-current="page"'; ?>>
+                                <a href="<?php echo $base_url . $i; ?>" <?php if ($i == $current_page) echo 'aria-current="page"'; ?>><?php echo $i; ?></a>
                             </li>
                         <?php endfor; ?>
 
@@ -290,38 +250,21 @@ mysqli_close($koneksi);
                         // Show last page and ellipsis if needed
                         if ($end_page < $total_pages) {
                             if ($end_page < $total_pages - 1) {
-                                echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                                echo '<li aria-disabled="true"><a aria-disabled="true" tabindex="-1">...</a></li>';
                             }
-                            echo '<li class="page-item"><a class="page-link" href="' . $base_url . $total_pages . '">' . $total_pages . '</a></li>';
+                            echo '<li><a href="' . $base_url . $total_pages . '">' . $total_pages . '</a></li>';
                         }
                         ?>
 
                         <!-- Next Button -->
-                        <li class="page-item <?php echo ($current_page >= $total_pages) ? 'disabled' : ''; ?>">
-                            <a class="page-link" href="<?php echo ($current_page >= $total_pages) ? '#' : $base_url . ($current_page + 1); ?>" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
+                        <li <?php if ($current_page >= $total_pages) echo 'aria-disabled="true"'; ?>>
+                            <a href="<?php echo ($current_page >= $total_pages) ? '#' : $base_url . ($current_page + 1); ?>" <?php if ($current_page >= $total_pages) echo 'aria-disabled="true" tabindex="-1"'; ?>>&raquo;</a>
                         </li>
                     </ul>
                 </nav>
                 <?php endif; ?>
-                
-                <!-- Scroll Boundary Footer -->
-                <div class="mt-5 mb-3 pt-4 animate__animated animate__fadeInUp">
-                    <hr class="border-2 border-primary opacity-25">
-                    <div class="d-flex justify-content-between align-items-center px-2">
-                        <div class="text-muted small">
-                            <i class="bi bi-book me-1"></i> Perpustakaan Muflih
-                        </div>
-                        <div class="text-muted small">
-                            &copy; <?php echo date('Y'); ?> | Developed with inspiration
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+            </article>
+        </main>
     </div>
-
-    <script src="../../assets/bootstrap.js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

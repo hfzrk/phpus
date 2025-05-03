@@ -86,123 +86,95 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errors[] = "Gagal menyiapkan statement: " . mysqli_error($koneksi);
         }
     }
-    mysqli_close($koneksi);
+    mysqli_close($koneksi); // Ensure connection is closed before potential header redirect
 }
-
 ?>
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Buku - Perpustakaan Muflih</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-     <style>
-        body {
-            display: flex;
-            min-height: 100vh;
-            flex-direction: row;
-        }
-        .sidebar {
-            width: 250px;
-            background-color: #343a40;
-            color: #fff;
-            min-height: 100vh;
-            padding: 15px;
-        }
-        .sidebar a {
-            color: #adb5bd;
-            text-decoration: none;
-            display: block;
-            padding: 10px 15px;
-        }
-        .sidebar a:hover, .sidebar a.active {
-            color: #fff;
-            background-color: #495057;
-        }
-        .content {
-            flex: 1;
-            padding: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="../../css/pico.css">
+    <link rel="stylesheet" href="../../css/bootstrap-icons.css">
 </head>
 <body>
-    <nav class="sidebar">
-        <h4 class="text-center mb-4">Perpus Muflih</h4>
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link" href="../../dashboard.php"><i class="bi bi-house-door-fill me-2"></i> Dashboard</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="list_buku.php"><i class="bi bi-book-fill me-2"></i> Daftar Buku</a>
-            </li>
-            <?php if ($role === 'admin'): ?>
-            <li class="nav-item">
-                <a class="nav-link" href="tambah_buku.php"><i class="bi bi-plus-circle-fill me-2"></i> Tambah Buku</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="../user/list_user.php"><i class="bi bi-people-fill me-2"></i> Manajemen User</a>
-            </li>
-             <li class="nav-item">
-                <a class="nav-link" href="../user/tambah_user.php"><i class="bi bi-person-plus-fill me-2"></i> Tambah User</a>
-            </li>
-            <?php endif; ?>
-             <li class="nav-item mt-auto">
-                <a class="nav-link" href="../../logout.php"><i class="bi bi-box-arrow-right me-2"></i> Logout</a>
-            </li>
-        </ul>
-    </nav>
+    <div class="container">
+        <!-- Navbar -->
+        <nav>
+            <ul>
+                <li><strong>Perpus Muflih</strong></li>
+            </ul>
+            <ul>
+                <li><a href="../../dashboard.php"><i class="bi bi-house-door-fill"></i> Dashboard</a></li>
+                <li><a href="list_buku.php"><i class="bi bi-book-fill"></i> Buku</a></li>
+                <?php if ($role === 'admin'): ?>
+                <li><a href="../user/list_user.php"><i class="bi bi-people-fill"></i> User</a></li>
+                <?php endif; ?>
+                <li><a href="../../logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+            </ul>
+        </nav>
 
-    <div class="content">
-        <div class="container-fluid">
-            <h2>Edit Buku (ID: <?php echo sanitize($book_id); ?>)</h2>
-            <hr>
+        <main>
+            <article>
+                <header>
+                    <h2><i class="bi bi-pencil-square"></i> Edit Buku (ID: <?php echo sanitize($book_id); ?>)</h2>
+                    <hr>
+                </header>
 
-            <?php if (!empty($errors)): ?>
-                <div class="alert alert-danger" role="alert">
-                    <strong>Error:</strong>
-                    <ul>
-                        <?php foreach ($errors as $error): ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
+                <?php if (!empty($errors)): ?>
+                    <div role="alert" class="contrast">
+                        <strong>Error:</strong>
+                        <ul>
+                            <?php foreach ($errors as $error): ?>
+                                <li><?php echo $error; ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                <?php endif; ?>
 
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?id=' . $book_id; ?>" method="post">
-                <input type="hidden" name="book_id" value="<?php echo sanitize($book_id); ?>">
-                <div class="mb-3">
-                    <label for="judul" class="form-label">Judul Buku</label>
-                    <input type="text" class="form-control" id="judul" name="judul" value="<?php echo sanitize($judul); ?>" required>
-                </div>
-                <div class="mb-3">
-                    <label for="pengarang" class="form-label">Pengarang</label>
-                    <input type="text" class="form-control" id="pengarang" name="pengarang" value="<?php echo sanitize($pengarang); ?>" required>
-                </div>
-                <div class="mb-3">
-                    <label for="penerbit" class="form-label">Penerbit</label>
-                    <input type="text" class="form-control" id="penerbit" name="penerbit" value="<?php echo sanitize($penerbit); ?>" required>
-                </div>
-                <div class="mb-3">
-                    <label for="tahun_terbit" class="form-label">Tahun Terbit</label>
-                    <input type="number" class="form-control" id="tahun_terbit" name="tahun_terbit" placeholder="YYYY" pattern="\d{4}" value="<?php echo sanitize($tahun_terbit); ?>" required>
-                </div>
-                <div class="mb-3">
-                    <label for="genre" class="form-label">Genre</label>
-                    <input type="text" class="form-control" id="genre" name="genre" value="<?php echo sanitize($genre); ?>" required>
-                </div>
-                <div class="mb-3">
-                    <label for="stok" class="form-label">Stok</label>
-                    <input type="number" class="form-control" id="stok" name="stok" min="0" value="<?php echo sanitize($stok); ?>" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                <a href="list_buku.php" class="btn btn-secondary">Batal</a>
-            </form>
-        </div>
+                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?id=' . $book_id; ?>" method="post">
+                    <input type="hidden" name="book_id" value="<?php echo sanitize($book_id); ?>">
+
+                    <label for="judul">
+                        Judul Buku
+                        <input type="text" id="judul" name="judul" value="<?php echo sanitize($judul); ?>" required>
+                    </label>
+
+                    <label for="pengarang">
+                        Pengarang
+                        <input type="text" id="pengarang" name="pengarang" value="<?php echo sanitize($pengarang); ?>" required>
+                    </label>
+
+                    <label for="penerbit">
+                        Penerbit
+                        <input type="text" id="penerbit" name="penerbit" value="<?php echo sanitize($penerbit); ?>" required>
+                    </label>
+
+                    <div class="grid">
+                        <label for="tahun_terbit">
+                            Tahun Terbit
+                            <input type="number" id="tahun_terbit" name="tahun_terbit" placeholder="YYYY" pattern="\d{4}" value="<?php echo sanitize($tahun_terbit); ?>" required>
+                        </label>
+                        <label for="genre">
+                            Genre
+                            <input type="text" id="genre" name="genre" value="<?php echo sanitize($genre); ?>" required>
+                        </label>
+                    </div>
+
+                    <label for="stok">
+                        Stok
+                        <input type="number" id="stok" name="stok" min="0" value="<?php echo sanitize($stok); ?>" required>
+                    </label>
+
+                    <div class="grid">
+                        <button type="submit"><i class="bi bi-save"></i> Simpan Perubahan</button>
+                        <a href="list_buku.php" role="button" class="secondary"><i class="bi bi-x-circle"></i> Batal</a>
+                    </div>
+                </form>
+            </article>
+        </main>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 

@@ -21,131 +21,107 @@ $error_message = isset($_GET['error']) ? sanitize($_GET['error']) : '';
 
 ?>
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manajemen User - Perpustakaan Muflih</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <style>
-        body {
-            display: flex;
-            min-height: 100vh;
-            flex-direction: row;
-        }
-        .sidebar {
-            width: 250px;
-            background-color: #343a40;
-            color: #fff;
-            min-height: 100vh;
-            padding: 15px;
-        }
-        .sidebar a {
-            color: #adb5bd;
-            text-decoration: none;
-            display: block;
-            padding: 10px 15px;
-        }
-        .sidebar a:hover, .sidebar a.active {
-            color: #fff;
-            background-color: #495057;
-        }
-        .content {
-            flex: 1;
-            padding: 20px;
-        }
-        .table-responsive {
-            margin-top: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="../../css/pico.css">
+    <link rel="stylesheet" href="../../css/bootstrap-icons.css">
 </head>
 <body>
-    <nav class="sidebar">
-        <h4 class="text-center mb-4">Perpus Muflih</h4>
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link" href="../../dashboard.php"><i class="bi bi-house-door-fill me-2"></i> Dashboard</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="../buku/list_buku.php"><i class="bi bi-book-fill me-2"></i> Daftar Buku</a>
-            </li>
-            <?php if ($role === 'admin'): ?>
-            <li class="nav-item">
-                <a class="nav-link" href="../buku/tambah_buku.php"><i class="bi bi-plus-circle-fill me-2"></i> Tambah Buku</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" href="list_user.php"><i class="bi bi-people-fill me-2"></i> Manajemen User</a>
-            </li>
-             <li class="nav-item">
-                <a class="nav-link" href="tambah_user.php"><i class="bi bi-person-plus-fill me-2"></i> Tambah User</a>
-            </li>
-            <?php endif; ?>
-             <li class="nav-item mt-auto">
-                <a class="nav-link" href="../../logout.php"><i class="bi bi-box-arrow-right me-2"></i> Logout</a>
-            </li>
-        </ul>
-    </nav>
+    <div class="container">
+        <!-- Navbar -->
+        <nav>
+            <ul>
+                <li><strong>Perpus Muflih</strong></li>
+            </ul>
+            <ul>
+                <li><a href="../../dashboard.php"><i class="bi bi-house-door-fill"></i> Dashboard</a></li>
+                <li><a href="../buku/list_buku.php"><i class="bi bi-book-fill"></i> Buku</a></li>
+                <?php if ($role === 'admin'): ?>
+                <li><a href="list_user.php" aria-current="page"><i class="bi bi-people-fill"></i> User</a></li>
+                <?php endif; ?>
+                <li><a href="../../logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+            </ul>
+        </nav>
 
-    <div class="content">
-        <div class="container-fluid">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                 <h2>Manajemen User</h2>
-                 <a href="tambah_user.php" class="btn btn-success"><i class="bi bi-person-plus-fill me-2"></i>Tambah User Baru</a>
-            </div>
-            <hr>
+        <main>
+            <article>
+                <header>
+                    <div class="grid">
+                        <h2><i class="bi bi-people-fill"></i> Manajemen User</h2>
+                        <div>
+                            <a href="tambah_user.php" role="button"><i class="bi bi-person-plus-fill"></i> Tambah User Baru</a>
+                        </div>
+                    </div>
+                    <hr>
+                </header>
 
-            <?php if ($success_message): ?>
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <?php echo $success_message; ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            <?php endif; ?>
-            <?php if ($error_message): ?>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <?php echo $error_message; ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            <?php endif; ?>
+                <?php if ($success_message): ?>
+                    <div role="alert">
+                        <?php echo $success_message; ?>
+                    </div>
+                <?php endif; ?>
 
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered table-hover">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>ID</th>
-                            <th>Username</th>
-                            <th>Role</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (count($users) > 0): ?>
-                            <?php foreach ($users as $user): ?>
+                <?php if ($error_message): ?>
+                    <div role="alert" class="contrast">
+                        <?php echo $error_message; ?>
+                    </div>
+                <?php endif; ?>
+
+                <figure>
+                    <table role="grid">
+                        <thead>
                             <tr>
-                                <td><?php echo sanitize($user['id']); ?></td>
-                                <td><?php echo sanitize($user['username']); ?></td>
-                                <td><?php echo sanitize(ucfirst($user['role'])); ?></td>
-                                <td>
-                                    <a href="edit_user.php?id=<?php echo $user['id']; ?>" class="btn btn-sm btn-warning me-1"><i class="bi bi-pencil-square"></i> Edit</a>
-                                    <?php if ($user['id'] != $_SESSION['user_id']): ?>
-                                        <a href="hapus_user.php?id=<?php echo $user['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus user ini?');"><i class="bi bi-trash-fill"></i> Hapus</a>
-                                    <?php else: ?>
-                                        <button class="btn btn-sm btn-danger" disabled><i class="bi bi-trash-fill"></i> Hapus</button>
-                                    <?php endif; ?>
-                                </td>
+                                <th scope="col">ID</th>
+                                <th scope="col">Username</th>
+                                <th scope="col">Role</th>
+                                <th scope="col">Aksi</th>
                             </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="4" class="text-center">Tidak ada data user ditemukan.</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                        </thead>
+                        <tbody>
+                            <?php if (count($users) > 0): ?>
+                                <?php foreach ($users as $user): ?>
+                                <tr>
+                                    <td><?php echo sanitize($user['id']); ?></td>
+                                    <td><?php echo sanitize($user['username']); ?></td>
+                                    <td>
+                                        <?php if ($user['role'] === 'admin'): ?>
+                                            <mark class="tertiary">Admin</mark>
+                                        <?php else: ?>
+                                            <mark>User</mark>
+                                        <?php endif; ?>
+                                    </td>                                    <td>
+                                        <div role="group">
+                                            <a href="edit_user.php?id=<?php echo $user['id']; ?>" role="button" class="secondary outline small"><i class="bi bi-pencil-square"></i> Edit</a>
+                                            <?php if ($user['id'] != $_SESSION['user_id']): ?>
+                                            <button type="button" class="contrast outline small" 
+                                                    onclick="if(confirm('Yakin ingin menghapus user: <?php echo addslashes(sanitize($user['username'])); ?>?')) {
+                                                        document.getElementById('delete-user-<?php echo $user['id']; ?>').submit();
+                                                    }">
+                                                <i class="bi bi-trash-fill"></i> Hapus
+                                            </button>
+                                            <form id="delete-user-<?php echo $user['id']; ?>" action="hapus_user.php" method="post" style="display:none;">
+                                                <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                                            </form>
+                                            <?php else: ?>
+                                            <button disabled class="outline small"><i class="bi bi-lock-fill"></i> Tidak dapat dihapus</button>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="4" class="center">Tidak ada user ditemukan.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </figure>
+            </article>
+        </main>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 $host = 'localhost';
 $db_user = 'root';
 $db_pass = '';
-$db_name = 'perpustakaan_muflih';
+$db_name = 'phpus';
 
 $koneksi = mysqli_connect($host, $db_user, $db_pass, $db_name);
 

@@ -68,169 +68,106 @@ if ($role === 'user') {
 }
 ?>
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Perpustakaan Muflih</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <style>
-        body {
-            display: flex;
-            min-height: 100vh;
-            flex-direction: column;
-        }
-        .sidebar {
-            width: 250px;
-            background-color: #343a40;
-            color: #fff;
-            min-height: 100vh;
-        }
-        .sidebar a {
-            color: #adb5bd;
-            text-decoration: none;
-            display: block;
-            padding: 10px 15px;
-        }
-        .sidebar a:hover, .sidebar a.active {
-            color: #fff;
-            background-color: #495057;
-        }
-        .content {
-            flex: 1;
-            padding: 20px;
-        }
-        .navbar {
-             background-color: #f8f9fa;
-        }
-    </style>
+    <link rel="stylesheet" href="css/pico.css">
+    <link rel="stylesheet" href="css/bootstrap-icons.css">
 </head>
 <body>
-
-    <div class="d-flex">
-        <nav class="sidebar p-3">
-            <h4 class="text-center mb-4">Perpus Muflih</h4>
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link active" href="dashboard.php"><i class="bi bi-house-door-fill me-2"></i> Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="pages/buku/list_buku.php"><i class="bi bi-book-fill me-2"></i> Daftar Buku</a>
-                </li>
+    <div class="container">
+        <!-- Navbar -->
+        <nav>
+            <ul>
+                <li><strong>Perpus Muflih</strong></li>
+            </ul>
+            <ul>
+                <li><a href="dashboard.php" aria-current="page"><i class="bi bi-house-door-fill"></i> Dashboard</a></li>
+                <li><a href="pages/buku/list_buku.php"><i class="bi bi-book-fill"></i> Buku</a></li>
                 <?php if ($role === 'admin'): ?>
-                <li class="nav-item">
-                    <a class="nav-link" href="pages/buku/tambah_buku.php"><i class="bi bi-plus-circle-fill me-2"></i> Tambah Buku</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="pages/user/list_user.php"><i class="bi bi-people-fill me-2"></i> Manajemen User</a>
-                </li>
-                 <li class="nav-item">
-                    <a class="nav-link" href="pages/user/tambah_user.php"><i class="bi bi-person-plus-fill me-2"></i> Tambah User</a>
-                </li>
+                <li><a href="pages/user/list_user.php"><i class="bi bi-people-fill"></i> User</a></li>
                 <?php else: ?>
-                <li class="nav-item">
-                    <a class="nav-link" href="pages/peminjaman/pinjam_buku.php"><i class="bi bi-journal-arrow-down me-2"></i> Pinjam Buku</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="pages/peminjaman/daftar_pinjaman.php"><i class="bi bi-journal-bookmark-fill me-2"></i> Buku Dipinjam</a>
-                </li>
+                <li><a href="pages/peminjaman/pinjam_buku.php"><i class="bi bi-journal-arrow-down"></i> Pinjam</a></li>
+                <li><a href="pages/peminjaman/daftar_pinjaman.php"><i class="bi bi-journal-bookmark-fill"></i> Pinjaman</a></li>
                 <?php endif; ?>
-                 <li class="nav-item mt-auto">
-                    <a class="nav-link" href="logout.php"><i class="bi bi-box-arrow-right me-2"></i> Logout</a>
-                </li>
+                <li><a href="logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
             </ul>
         </nav>
-
-        <div class="content">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-                <div class="container-fluid">
-                    <span class="navbar-brand">Selamat Datang, <?php echo $username; ?> (<?php echo ucfirst($role); ?>)</span>
-                     <a href="logout.php" class="btn btn-outline-danger ms-auto">Logout</a>
-                </div>
-            </nav>
-
-            <div class="container-fluid">
-                <h2>Dashboard Utama</h2>
-                <hr>
+        
+        <main>
+            <article>
+                <header>
+                    <div class="grid">
+                        <h2>Selamat Datang, <?php echo $username; ?> (<?php echo ucfirst($role); ?>)</h2>
+                    </div>
+                    <hr>
+                </header>
 
                 <?php if (!empty($error_message)): ?>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <div role="alert" class="contrast">
                         <?php echo $error_message; ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 <?php endif; ?>
                 <?php if (!empty($success_message)): ?>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <div role="alert">
                         <?php echo $success_message; ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 <?php endif; ?>
 
                 <p>Selamat datang di sistem informasi Perpustakaan Muflih.</p>
-                <p>Gunakan menu di sebelah kiri untuk navigasi.</p>
+                <p>Gunakan menu di bagian atas untuk navigasi.</p>
 
                 <?php if ($role === 'admin'): ?>
-                    <div class="row mt-4">
-                        <div class="col-md-4">
-                            <div class="card text-white bg-primary mb-3">
-                                <div class="card-header">Buku</div>
-                                <div class="card-body">
-                                    <h5 class="card-title">Kelola Buku</h5>
-                                    <p class="card-text">Tambah, edit, atau hapus data buku.</p>
-                                    <a href="pages/buku/list_buku.php" class="btn btn-light">Lihat Buku</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card text-white bg-success mb-3">
-                                <div class="card-header">User</div>
-                                <div class="card-body">
-                                    <h5 class="card-title">Kelola User</h5>
-                                    <p class="card-text">Tambah atau lihat data user.</p>
-                                    <a href="pages/user/list_user.php" class="btn btn-light">Lihat User</a>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="grid">
+                        <article>
+                            <header>Buku</header>
+                            <h5>Kelola Buku</h5>
+                            <p>Tambah, edit, atau hapus data buku.</p>
+                            <footer>
+                                <a href="pages/buku/list_buku.php" role="button">Lihat Buku</a>
+                            </footer>
+                        </article>
+                        <article>
+                            <header>User</header>
+                            <h5>Kelola User</h5>
+                            <p>Tambah atau lihat data user.</p>
+                            <footer>
+                                <a href="pages/user/list_user.php" role="button">Lihat User</a>
+                            </footer>
+                        </article>
                     </div>
                 <?php else: ?>
-                     <div class="row mt-4">
-                        <div class="col-md-4">
-                            <div class="card text-white bg-info mb-3">
-                                <div class="card-header">Buku</div>
-                                <div class="card-body">
-                                    <h5 class="card-title">Lihat Buku</h5>
-                                    <p class="card-text">Lihat koleksi buku yang tersedia.</p>
-                                    <a href="pages/buku/list_buku.php" class="btn btn-light">Lihat Daftar Buku</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card text-white bg-primary mb-3">
-                                <div class="card-header">Peminjaman</div>
-                                <div class="card-body">
-                                    <h5 class="card-title">Pinjam Buku</h5>
-                                    <p class="card-text">Pinjam buku dari koleksi perpustakaan.</p>
-                                    <a href="pages/peminjaman/pinjam_buku.php" class="btn btn-light">Pinjam Buku</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card text-white bg-success mb-3">
-                                <div class="card-header">Buku Dipinjam</div>
-                                <div class="card-body">
-                                    <h5 class="card-title">Buku Saya</h5>
-                                    <p class="card-text">Lihat dan kelola buku yang sedang Anda pinjam.</p>
-                                    <a href="pages/peminjaman/daftar_pinjaman.php" class="btn btn-light">Lihat Pinjaman</a>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="grid">
+                        <article>
+                            <header>Buku</header>
+                            <h5>Lihat Buku</h5>
+                            <p>Lihat koleksi buku yang tersedia.</p>
+                            <footer>
+                                <a href="pages/buku/list_buku.php" role="button">Lihat Daftar Buku</a>
+                            </footer>
+                        </article>
+                        <article>
+                            <header>Peminjaman</header>
+                            <h5>Pinjam Buku</h5>
+                            <p>Pinjam buku dari koleksi perpustakaan.</p>
+                            <footer>
+                                <a href="pages/peminjaman/pinjam_buku.php" role="button">Pinjam Buku</a>
+                            </footer>
+                        </article>
+                        <article>
+                            <header>Buku Dipinjam</header>
+                            <h5>Buku Saya</h5>
+                            <p>Lihat dan kelola buku yang sedang Anda pinjam.</p>
+                            <footer>
+                                <a href="pages/peminjaman/daftar_pinjaman.php" role="button">Lihat Pinjaman</a>
+                            </footer>
+                        </article>
                     </div>
                 <?php endif; ?>
-            </div>
-        </div>
+            </article>
+        </main>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
