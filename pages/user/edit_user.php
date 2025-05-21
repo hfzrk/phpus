@@ -19,7 +19,7 @@ if ($user_id > 0) {
 
         if ($user) {
             $username = $user['username'];
-            $role = $user['role'];
+            $user_role = $user['role'];
         } else {
             header("Location: list_user.php?error=User tidak ditemukan.");
             exit();
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors[] = "Role tidak valid.";
     }
     if ($current_user_id !== $user_id) {
-         $errors[] = "ID User tidak cocok.";
+        $errors[] = "ID User tidak cocok.";
     }
 
     if ($new_username !== $username && empty($errors)) {
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
                 mysqli_stmt_close($stmt_update);
             } else {
-                $errors[] = "Gagal menyiapkan statement update: " . mysqli_error($koneksi);
+                $errors[] = "Gagal menyiapkan statement: " . mysqli_error($koneksi);
             }
         } else {
             $sql_update = "UPDATE users SET username = ?, role = ? WHERE id = ?";
@@ -104,46 +104,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
                 mysqli_stmt_close($stmt_update);
             } else {
-                $errors[] = "Gagal menyiapkan statement update: " . mysqli_error($koneksi);
+                $errors[] = "Gagal menyiapkan statement: " . mysqli_error($koneksi);
             }
         }
     }
-    $username = $new_username;
-    $role = $new_role;
     mysqli_close($koneksi);
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="id" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit User - Perpustakaan Muflih</title>
+    <title>Edit User - Phpus</title>
     <link rel="stylesheet" href="../../css/pico.css">
-    <link rel="stylesheet" href="../../css/bootstrap-icons.css">
 </head>
 <body>
     <div class="container">
         <!-- Navbar -->
         <nav>
             <ul>
-                <li><strong>Perpus Muflih</strong></li>
+                <li><strong>Phpus</strong></li>
             </ul>
             <ul>
-                <li><a href="../../dashboard.php"><i class="bi bi-house-door-fill"></i> Dashboard</a></li>
-                <li><a href="../buku/list_buku.php"><i class="bi bi-book-fill"></i> Buku</a></li>
+                <li><a href="../../dashboard.php">Dashboard</a></li>
+                <li><a href="../buku/list_buku.php">Buku</a></li>
                 <?php if ($role === 'admin'): ?>
-                <li><a href="list_user.php"><i class="bi bi-people-fill"></i> User</a></li>
+                <li><a href="list_user.php">User</a></li>
                 <?php endif; ?>
-                <li><a href="../../logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                <li><a href="../../logout.php">Logout</a></li>
             </ul>
         </nav>
 
         <main>
             <article>
                 <header>
-                    <h2><i class="bi bi-pencil-square"></i> Edit User (ID: <?php echo sanitize($user_id); ?>)</h2>
+                    <h2>Edit User (ID: <?php echo sanitize($user_id); ?>)</h2>
                     <hr>
                 </header>
 
@@ -160,33 +156,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?id=' . $user_id; ?>" method="post">
                     <input type="hidden" name="user_id" value="<?php echo sanitize($user_id); ?>">
-                    
+
                     <label for="username">
                         Username
                         <input type="text" id="username" name="username" value="<?php echo sanitize($username); ?>" required>
                     </label>
-                    
+
                     <label for="password">
-                        Password Baru (Opsional)
-                        <input type="password" id="password" name="password">
-                        <small>Kosongkan jika tidak ingin mengubah password. Minimal 6 karakter jika diisi.</small>
+                        Password
+                        <input type="password" id="password" name="password" placeholder="Biarkan kosong jika tidak ingin mengubah password">
+                        <small>Biarkan kosong jika tidak ingin mengubah password.</small>
                     </label>
-                    
+
                     <label for="role">
                         Role
                         <select id="role" name="role" required>
-                            <option value="admin" <?php echo ($role == 'admin') ? 'selected' : ''; ?>>Admin</option>
-                            <option value="user" <?php echo ($role == 'user') ? 'selected' : ''; ?>>User</option>
+                            <option value="admin" <?php echo ($user_role === 'admin') ? 'selected' : ''; ?>>Admin</option>
+                            <option value="user" <?php echo ($user_role === 'user') ? 'selected' : ''; ?>>User</option>
                         </select>
                     </label>
-                    
+
                     <div class="grid">
-                        <button type="submit"><i class="bi bi-save"></i> Simpan Perubahan</button>
-                        <a href="list_user.php" role="button" class="secondary"><i class="bi bi-x-circle"></i> Batal</a>
+                        <button type="submit">Simpan Perubahan</button>
+                        <button type="button" class="secondary" onclick="window.location.href='list_user.php'">Batal</button>
                     </div>
                 </form>
             </article>
         </main>
     </div>
 </body>
+</html>
+    </div>
+</body>
+</html>
 </html>

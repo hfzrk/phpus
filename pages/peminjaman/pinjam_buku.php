@@ -96,27 +96,27 @@ mysqli_close($koneksi);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pinjam Buku - Perpustakaan Muflih</title>
+    <title>Pinjam Buku - Phpus</title>
     <link rel="stylesheet" href="../../css/pico.css">
-    <link rel="stylesheet" href="../../css/bootstrap-icons.css">
+    <link rel="stylesheet" href="../../css/custom.css">
 </head>
 <body>
     <div class="container">
         <!-- Navbar -->
         <nav>
             <ul>
-                <li><strong>Perpus Muflih</strong></li>
+                <li><strong>Phpus</strong></li>
             </ul>
             <ul>
-                <li><a href="../../dashboard.php"><i class="bi bi-house-door-fill"></i> Dashboard</a></li>
-                <li><a href="../buku/list_buku.php"><i class="bi bi-book-fill"></i> Buku</a></li>
+                <li><a href="../../dashboard.php">Dashboard</a></li>
+                <li><a href="../buku/list_buku.php">Buku</a></li>
                 <?php if ($role === 'admin'): ?>
-                <li><a href="../user/list_user.php"><i class="bi bi-people-fill"></i> User</a></li>
+                <li><a href="../user/list_user.php">User</a></li>
                 <?php else: ?>
-                <li><a href="pinjam_buku.php" aria-current="page"><i class="bi bi-journal-arrow-down"></i> Pinjam</a></li>
-                <li><a href="daftar_pinjaman.php"><i class="bi bi-journal-bookmark-fill"></i> Pinjaman</a></li>
+                <li><a href="pinjam_buku.php" aria-current="page">Pinjam</a></li>
+                <li><a href="daftar_pinjaman.php">Pinjaman</a></li>
                 <?php endif; ?>
-                <li><a href="../../logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                <li><a href="../../logout.php">Logout</a></li>
             </ul>
         </nav>
 
@@ -124,9 +124,9 @@ mysqli_close($koneksi);
             <article>
                 <header>
                     <div class="grid">
-                        <h2><i class="bi bi-journal-arrow-down"></i> Pinjam Buku</h2>
-                        <div>
-                            <a href="daftar_pinjaman.php" role="button" class="outline"><i class="bi bi-journal-bookmark-fill"></i> Lihat Buku Dipinjam</a>
+                        <h2>Pinjam Buku</h2>
+                        <div style="text-align: right;">
+                            <a href="daftar_pinjaman.php" role="button" class="outline">Lihat Buku Dipinjam</a>
                         </div>
                     </div>
                     <hr>
@@ -148,16 +148,19 @@ mysqli_close($koneksi);
                     <div role="alert" class="contrast">
                         <?php echo $error_message; ?>
                     </div>
-                <?php endif; ?>                <!-- Search form -->                <form method="get" action="pinjam_buku.php">
+                <?php endif; ?>                
+                
+                <!-- Search form -->                
+                <form method="get" action="pinjam_buku.php">
                     <div class="grid">
                         <div>
                             <input type="search" name="search" placeholder="Cari judul buku..." value="<?php echo !empty($search) ? sanitize($search) : ''; ?>">
                         </div>
                         <div>
-                            <div role="group">
-                                <button type="submit"><i class="bi bi-search"></i> Cari</button>
+                            <div>
+                                <button type="submit">Cari</button>
                                 <?php if (!empty($search)): ?>
-                                    <a href="pinjam_buku.php" role="button" class="secondary outline"><i class="bi bi-x-lg"></i> Reset</a>
+                                    <a href="pinjam_buku.php" role="button" class="secondary outline">Reset</a>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -165,13 +168,13 @@ mysqli_close($koneksi);
                 </form>
 
                 <figure>
-                    <table role="grid">
+                    <table role="grid" class="responsive-table">
                         <thead>
                             <tr>
                                 <th scope="col">Judul</th>
                                 <th scope="col">Pengarang</th>
-                                <th scope="col">Penerbit</th>
-                                <th scope="col">Tahun Terbit</th>
+                                <th class="mobile-hide" scope="col">Penerbit</th>
+                                <th class="mobile-hide" scope="col">Tahun Terbit</th>
                                 <th scope="col">Genre</th>
                                 <th scope="col">Stok</th>
                                 <th scope="col">Aksi</th>
@@ -183,8 +186,8 @@ mysqli_close($koneksi);
                                 <tr>
                                     <td><?php echo sanitize($book['judul']); ?></td>
                                     <td><?php echo sanitize($book['pengarang']); ?></td>
-                                    <td><?php echo sanitize($book['penerbit']); ?></td>
-                                    <td><?php echo sanitize($book['tahun_terbit']); ?></td>
+                                    <td class="mobile-hide"><?php echo sanitize($book['penerbit']); ?></td>
+                                    <td class="mobile-hide"><?php echo sanitize($book['tahun_terbit']); ?></td>
                                     <td><?php echo sanitize($book['genre']); ?></td>
                                     <td>
                                         <?php if ($book['stok'] > 2): ?>
@@ -197,11 +200,11 @@ mysqli_close($koneksi);
                                     </td>
                                     <td>
                                         <?php if ($book['stok'] > 0): ?>
-                                            <a href="proses_pinjam.php?id=<?php echo $book['id']; ?>" role="button" class="outline small" onclick="return confirm('Pinjam buku <?php echo addslashes(sanitize($book['judul'])); ?>?');">
-                                                <i class="bi bi-journal-plus"></i> Pinjam
+                                            <a href="proses_pinjam.php?id=<?php echo $book['id']; ?>" role="button" class="outline small" onclick="return confirm('Yakin ingin meminjam buku <?php echo addslashes(sanitize($book['judul'])); ?>?');">
+                                                Pinjam
                                             </a>
                                         <?php else: ?>
-                                            <button disabled class="outline small"><i class="bi bi-x-circle"></i> Habis</button>
+                                            <button disabled class="outline small">Habis</button>
                                         <?php endif; ?>
                                     </td>
                                 </tr>

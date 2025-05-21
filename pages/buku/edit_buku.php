@@ -94,31 +94,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Buku - Perpustakaan Muflih</title>
+    <title>Edit Buku - Phpus</title>
     <link rel="stylesheet" href="../../css/pico.css">
-    <link rel="stylesheet" href="../../css/bootstrap-icons.css">
 </head>
 <body>
     <div class="container">
         <!-- Navbar -->
         <nav>
             <ul>
-                <li><strong>Perpus Muflih</strong></li>
+                <li><strong>Phpus</strong></li>
             </ul>
             <ul>
-                <li><a href="../../dashboard.php"><i class="bi bi-house-door-fill"></i> Dashboard</a></li>
-                <li><a href="list_buku.php"><i class="bi bi-book-fill"></i> Buku</a></li>
+                <li><a href="../../dashboard.php">Dashboard</a></li>
+                <li><a href="list_buku.php">Buku</a></li>
                 <?php if ($role === 'admin'): ?>
-                <li><a href="../user/list_user.php"><i class="bi bi-people-fill"></i> User</a></li>
+                <li><a href="../user/list_user.php">User</a></li>
                 <?php endif; ?>
-                <li><a href="../../logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                <li><a href="../../logout.php">Logout</a></li>
             </ul>
         </nav>
 
         <main>
             <article>
                 <header>
-                    <h2><i class="bi bi-pencil-square"></i> Edit Buku (ID: <?php echo sanitize($book_id); ?>)</h2>
+                    <h2>Edit Buku (ID: <?php echo sanitize($book_id); ?>)</h2>
                     <hr>
                 </header>
 
@@ -168,8 +167,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </label>
 
                     <div class="grid">
-                        <button type="submit"><i class="bi bi-save"></i> Simpan Perubahan</button>
-                        <a href="list_buku.php" role="button" class="secondary"><i class="bi bi-x-circle"></i> Batal</a>
+                        <button type="submit">Simpan Perubahan</button>
+                        <button type="button" class="secondary" onclick="window.location.href='list_buku.php'">Batal</button>
                     </div>
                 </form>
             </article>

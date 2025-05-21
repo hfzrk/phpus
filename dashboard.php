@@ -72,27 +72,40 @@ if ($role === 'user') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Perpustakaan Muflih</title>
+    <title>Dashboard - Phpus</title>
     <link rel="stylesheet" href="css/pico.css">
-    <link rel="stylesheet" href="css/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/custom.css">
+    <style>
+        .dashboard-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .dashboard-card .card-content {
+            flex: 1;
+        }
+        .dashboard-card footer {
+            margin-top: auto;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <!-- Navbar -->
         <nav>
             <ul>
-                <li><strong>Perpus Muflih</strong></li>
+                <li><strong>Phpus</strong></li>
             </ul>
             <ul>
-                <li><a href="dashboard.php" aria-current="page"><i class="bi bi-house-door-fill"></i> Dashboard</a></li>
-                <li><a href="pages/buku/list_buku.php"><i class="bi bi-book-fill"></i> Buku</a></li>
+                <li><a href="dashboard.php" aria-current="page">Dashboard</a></li>
+                <li><a href="pages/buku/list_buku.php">Buku</a></li>
                 <?php if ($role === 'admin'): ?>
-                <li><a href="pages/user/list_user.php"><i class="bi bi-people-fill"></i> User</a></li>
+                <li><a href="pages/user/list_user.php">User</a></li>
                 <?php else: ?>
-                <li><a href="pages/peminjaman/pinjam_buku.php"><i class="bi bi-journal-arrow-down"></i> Pinjam</a></li>
-                <li><a href="pages/peminjaman/daftar_pinjaman.php"><i class="bi bi-journal-bookmark-fill"></i> Pinjaman</a></li>
+                <li><a href="pages/peminjaman/pinjam_buku.php">Pinjam</a></li>
+                <li><a href="pages/peminjaman/daftar_pinjaman.php">Pinjaman</a></li>
                 <?php endif; ?>
-                <li><a href="logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                <li><a href="logout.php">Logout</a></li>
             </ul>
         </nav>
         
@@ -116,23 +129,27 @@ if ($role === 'user') {
                     </div>
                 <?php endif; ?>
 
-                <p>Selamat datang di sistem informasi Perpustakaan Muflih.</p>
+                <p>Selamat datang di sistem informasi Phpus.</p>
                 <p>Gunakan menu di bagian atas untuk navigasi.</p>
 
                 <?php if ($role === 'admin'): ?>
                     <div class="grid">
-                        <article>
+                        <article class="dashboard-card">
                             <header>Buku</header>
-                            <h5>Kelola Buku</h5>
-                            <p>Tambah, edit, atau hapus data buku.</p>
+                            <div class="card-content">
+                                <h5>Kelola Buku</h5>
+                                <p>Tambah, edit, atau hapus data buku.</p>
+                            </div>
                             <footer>
                                 <a href="pages/buku/list_buku.php" role="button">Lihat Buku</a>
                             </footer>
                         </article>
-                        <article>
+                        <article class="dashboard-card">
                             <header>User</header>
-                            <h5>Kelola User</h5>
-                            <p>Tambah atau lihat data user.</p>
+                            <div class="card-content">
+                                <h5>Kelola User</h5>
+                                <p>Tambah atau lihat data user.</p>
+                            </div>
                             <footer>
                                 <a href="pages/user/list_user.php" role="button">Lihat User</a>
                             </footer>
@@ -140,26 +157,32 @@ if ($role === 'user') {
                     </div>
                 <?php else: ?>
                     <div class="grid">
-                        <article>
+                        <article class="dashboard-card">
                             <header>Buku</header>
-                            <h5>Lihat Buku</h5>
-                            <p>Lihat koleksi buku yang tersedia.</p>
+                            <div class="card-content">
+                                <h5>Lihat Buku</h5>
+                                <p>Lihat koleksi buku yang tersedia.</p>
+                            </div>
                             <footer>
                                 <a href="pages/buku/list_buku.php" role="button">Lihat Daftar Buku</a>
                             </footer>
                         </article>
-                        <article>
+                        <article class="dashboard-card">
                             <header>Peminjaman</header>
-                            <h5>Pinjam Buku</h5>
-                            <p>Pinjam buku dari koleksi perpustakaan.</p>
+                            <div class="card-content">
+                                <h5>Pinjam Buku</h5>
+                                <p>Pinjam buku dari koleksi perpustakaan.</p>
+                            </div>
                             <footer>
                                 <a href="pages/peminjaman/pinjam_buku.php" role="button">Pinjam Buku</a>
                             </footer>
                         </article>
-                        <article>
+                        <article class="dashboard-card">
                             <header>Buku Dipinjam</header>
-                            <h5>Buku Saya</h5>
-                            <p>Lihat dan kelola buku yang sedang Anda pinjam.</p>
+                            <div class="card-content">
+                                <h5>Buku Saya</h5>
+                                <p>Lihat dan kelola buku yang sedang Anda pinjam.</p>
+                            </div>
                             <footer>
                                 <a href="pages/peminjaman/daftar_pinjaman.php" role="button">Lihat Pinjaman</a>
                             </footer>

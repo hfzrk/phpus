@@ -86,27 +86,27 @@ mysqli_close($koneksi);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buku Dipinjam - Perpustakaan Muflih</title>
+    <title>Buku Dipinjam - Phpus</title>
     <link rel="stylesheet" href="../../css/pico.css">
-    <link rel="stylesheet" href="../../css/bootstrap-icons.css">
+    <link rel="stylesheet" href="../../css/custom.css">
 </head>
 <body>
     <div class="container">
         <!-- Navbar -->
         <nav>
             <ul>
-                <li><strong>Perpus Muflih</strong></li>
+                <li><strong>Phpus</strong></li>
             </ul>
             <ul>
-                <li><a href="../../dashboard.php"><i class="bi bi-house-door-fill"></i> Dashboard</a></li>
-                <li><a href="../buku/list_buku.php"><i class="bi bi-book-fill"></i> Buku</a></li>
+                <li><a href="../../dashboard.php">Dashboard</a></li>
+                <li><a href="../buku/list_buku.php">Buku</a></li>
                 <?php if ($role === 'admin'): ?>
-                <li><a href="../user/list_user.php"><i class="bi bi-people-fill"></i> User</a></li>
+                <li><a href="../user/list_user.php">User</a></li>
                 <?php else: ?>
-                <li><a href="pinjam_buku.php"><i class="bi bi-journal-arrow-down"></i> Pinjam</a></li>
-                <li><a href="daftar_pinjaman.php" aria-current="page"><i class="bi bi-journal-bookmark-fill"></i> Pinjaman</a></li>
+                <li><a href="pinjam_buku.php">Pinjam</a></li>
+                <li><a href="daftar_pinjaman.php" aria-current="page">Pinjaman</a></li>
                 <?php endif; ?>
-                <li><a href="../../logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                <li><a href="../../logout.php">Logout</a></li>
             </ul>
         </nav>
 
@@ -114,9 +114,9 @@ mysqli_close($koneksi);
             <article>
                 <header>
                     <div class="grid">
-                        <h2><i class="bi bi-journal-bookmark-fill"></i> Daftar Buku Dipinjam</h2>
-                        <div>
-                            <a href="pinjam_buku.php" role="button"><i class="bi bi-journal-plus"></i> Pinjam Buku</a>
+                        <h2>Daftar Buku Dipinjam</h2>
+                        <div style="text-align: right;">
+                            <a href="pinjam_buku.php" role="button">Pinjam Buku</a>
                         </div>
                     </div>
                     <hr>
@@ -132,30 +132,30 @@ mysqli_close($koneksi);
                     <div role="alert" class="contrast">
                         <?php echo $error_message; ?>
                     </div>
-                <?php endif; ?>                <!-- Filter options -->
+                <?php endif; ?>                
+                
+                <!-- Filter options -->
                 <div class="grid">
-                    <div>
-                        <div role="group">
-                            <a href="?filter=all" role="button" class="<?php echo $filter === 'all' ? 'primary' : 'outline secondary'; ?>">
-                                <i class="bi bi-grid-fill"></i> Semua
-                            </a>
-                            <a href="?filter=active" role="button" class="<?php echo $filter === 'active' ? 'primary' : 'outline secondary'; ?>">
-                                <i class="bi bi-hourglass-split"></i> Sedang Dipinjam
-                            </a>
-                            <a href="?filter=returned" role="button" class="<?php echo $filter === 'returned' ? 'primary' : 'outline secondary'; ?>">
-                                <i class="bi bi-check-circle-fill"></i> Sudah Dikembalikan
-                            </a>
-                        </div>
+                    <div class="text-center">
+                        <button onclick="window.location.href='?filter=all'" role="button" class="<?php echo $filter === 'all' ? 'primary' : 'outline secondary'; ?>">
+                            Semua
+                        </button>
+                        <button onclick="window.location.href='?filter=active'" role="button" class="<?php echo $filter === 'active' ? 'primary' : 'outline secondary'; ?>">
+                            Sedang Dipinjam
+                        </button>
+                        <button onclick="window.location.href='?filter=returned'" role="button" class="<?php echo $filter === 'returned' ? 'primary' : 'outline secondary'; ?>">
+                            Sudah Dikembalikan
+                        </button>
                     </div>
                 </div>
 
                 <figure>
-                    <table role="grid">
+                    <table role="grid" class="responsive-table">
                         <thead>
                             <tr>
                                 <th scope="col">Judul Buku</th>
-                                <th scope="col">Pengarang</th>
-                                <th scope="col">Genre</th>
+                                <th class="mobile-hide" scope="col">Pengarang</th>
+                                <th class="mobile-hide" scope="col">Genre</th>
                                 <th scope="col">Tanggal Pinjam</th>
                                 <th scope="col">Tanggal Kembali</th>
                                 <th scope="col">Status</th>
@@ -167,16 +167,16 @@ mysqli_close($koneksi);
                                 <?php foreach ($loans as $loan): ?>
                                 <tr>
                                     <td><?php echo sanitize($loan['judul']); ?></td>
-                                    <td><?php echo sanitize($loan['pengarang']); ?></td>
-                                    <td><?php echo sanitize($loan['genre']); ?></td>
+                                    <td class="mobile-hide"><?php echo sanitize($loan['pengarang']); ?></td>
+                                    <td class="mobile-hide"><?php echo sanitize($loan['genre']); ?></td>
                                     <td><?php echo sanitize($loan['tanggal_pinjam']); ?></td>
                                     <td>
                                         <?php echo sanitize($loan['tanggal_kembali']); ?>
                                         <?php if ($loan['status'] === 'dipinjam'): ?>
                                             <?php if ($loan['days_remaining'] < 0): ?>
-                                                <mark class="contrast"><i class="bi bi-exclamation-triangle-fill"></i> Terlambat <?php echo abs($loan['days_remaining']); ?> hari</mark>
+                                                <mark class="contrast">Terlambat <?php echo abs($loan['days_remaining']); ?> hari</mark>
                                             <?php elseif ($loan['days_remaining'] <= 2): ?>
-                                                <mark class="secondary"><i class="bi bi-clock-fill"></i> <?php echo $loan['days_remaining']; ?> hari lagi</mark>
+                                                <mark class="secondary"><?php echo $loan['days_remaining']; ?> hari lagi</mark>
                                             <?php endif; ?>
                                         <?php endif; ?>
                                     </td>
@@ -190,10 +190,10 @@ mysqli_close($koneksi);
                                     <td>
                                         <?php if ($loan['status'] === 'dipinjam'): ?>
                                         <a href="kembalikan_buku.php?id=<?php echo $loan['id']; ?>" role="button" class="outline small" onclick="return confirm('Yakin ingin mengembalikan buku <?php echo addslashes(sanitize($loan['judul'])); ?>?');">
-                                            <i class="bi bi-arrow-left-circle-fill"></i> Kembalikan
+                                            Kembalikan
                                         </a>
                                         <?php else: ?>
-                                        <button disabled class="outline small"><i class="bi bi-check-circle-fill"></i> Sudah Dikembalikan</button>
+                                        <button disabled class="outline small">Sudah Dikembalikan</button>
                                         <?php endif; ?>
                                     </td>
                                 </tr>

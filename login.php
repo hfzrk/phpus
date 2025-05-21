@@ -102,9 +102,10 @@ if (isset($_GET['error'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Perpustakaan Muflih</title>
+    <title>Login - Phpus</title>
     <link rel="stylesheet" href="css/pico.css">
     <link rel="stylesheet" href="css/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/custom.css">
 </head>
 <body>
     <!-- Using Pico's grid layout for the login page -->
@@ -112,7 +113,7 @@ if (isset($_GET['error'])) {
         <article class="grid">
             <div>
                 <hgroup>
-                    <h1>Perpustakaan Muflih</h1>
+                    <h1>Phpus</h1>
                     <h2>Silahkan Login</h2>
                 </hgroup>
 
@@ -139,14 +140,14 @@ if (isset($_GET['error'])) {
             
             <div>
                 <article>
-                    <h3>Selamat Datang di Perpustakaan Muflih</h3>
+                    <h3>Selamat Datang di Phpus</h3>
                     <p>Sistem informasi perpustakaan untuk pengelolaan buku dan peminjaman yang efisien dan mudah digunakan.</p>
                 </article>
             </div>
         </article>
         
         <footer>
-            <small>&copy; Perpustakaan Muflih <?php echo date("Y"); ?></small>
+            <small>&copy; Phpus <?php echo date("Y"); ?></small>
         </footer>
     </main>
 </body>

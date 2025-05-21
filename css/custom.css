@@ -1,0 +1,106 @@
+/* Custom styles for better responsiveness */
+
+/* Responsive tables */
+@media (max-width: 767px) {
+  table:not(.no-responsive) {
+    display: block;
+    overflow-x: auto;
+  }
+  
+  /* Stack cards on mobile */
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Adjust form width on mobile */
+  input, select, textarea {
+    width: 100%;
+  }
+  
+  /* Improve form grid on mobile */
+  .grid > label {
+    grid-column: 1/-1;
+  }
+  
+  /* Make nav menu more mobile-friendly */
+  nav {
+    flex-direction: column;
+  }
+  
+  nav ul {
+    width: 100%;
+    padding: 0.5rem 0;
+  }
+  
+  /* Stack buttons in form actions */
+  form .grid button,
+  form .grid [role="button"] {
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Utility classes */
+.center {
+  text-align: center;
+}
+
+.mobile-hide {
+  display: block;
+}
+
+@media (max-width: 767px) {
+  .mobile-hide {
+    display: none;
+  }
+  
+  .mobile-full-width {
+    width: 100%;
+  }
+}
+
+/* Improve buttons on mobile */
+@media (max-width: 767px) {
+  [role="group"] {
+    flex-direction: column;
+  }
+  
+  [role="group"] > * {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  [role="group"] > *:not(:first-child) {
+    margin-left: 0;
+  }
+}
+
+/* Button and layout utilities */
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Mobile utilities */
+.mobile-hide {
+    display: table-cell;
+}
+
+@media (max-width: 576px) {
+    .mobile-hide {
+        display: none;
+    }
+}
+
+/* Table responsive utilities */
+.responsive-table {
+    overflow-x: auto;
+}
+
+/* Button size consistency */
+.small {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+}

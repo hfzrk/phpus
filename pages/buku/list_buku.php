@@ -82,27 +82,27 @@ mysqli_close($koneksi);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Buku - Perpustakaan Muflih</title>
+    <title>Daftar Buku - Phpus</title>
     <link rel="stylesheet" href="../../css/pico.css">
-    <link rel="stylesheet" href="../../css/bootstrap-icons.css">
+    <link rel="stylesheet" href="../../css/custom.css">
 </head>
 <body>
     <div class="container">
         <!-- Navbar -->
         <nav>
             <ul>
-                <li><strong>Perpus Muflih</strong></li>
+                <li><strong>Phpus</strong></li>
             </ul>
             <ul>
-                <li><a href="../../dashboard.php"><i class="bi bi-house-door-fill"></i> Dashboard</a></li>
-                <li><a href="list_buku.php" aria-current="page"><i class="bi bi-book-fill"></i> Buku</a></li>
+                <li><a href="../../dashboard.php">Dashboard</a></li>
+                <li><a href="list_buku.php" aria-current="page">Buku</a></li>
                 <?php if ($role === 'admin'): ?>
-                <li><a href="../user/list_user.php"><i class="bi bi-people-fill"></i> User</a></li>
+                <li><a href="../user/list_user.php">User</a></li>
                 <?php else: ?>
-                <li><a href="../peminjaman/pinjam_buku.php"><i class="bi bi-journal-arrow-down"></i> Pinjam</a></li>
-                <li><a href="../peminjaman/daftar_pinjaman.php"><i class="bi bi-journal-bookmark-fill"></i> Pinjaman</a></li>
+                <li><a href="../peminjaman/pinjam_buku.php">Pinjam</a></li>
+                <li><a href="../peminjaman/daftar_pinjaman.php">Pinjaman</a></li>
                 <?php endif; ?>
-                <li><a href="../../logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                <li><a href="../../logout.php">Logout</a></li>
             </ul>
         </nav>
         
@@ -110,10 +110,10 @@ mysqli_close($koneksi);
             <article>
                 <header>
                     <div class="grid">
-                        <h2><i class="bi bi-book-fill"></i> Daftar Buku</h2>
+                        <h2>Daftar Buku</h2>
                         <?php if ($role === 'admin'): ?>
-                        <div>
-                            <button onclick="window.location.href='tambah_buku.php'"><i class="bi bi-plus-circle"></i> Tambah Buku</button>
+                        <div style="text-align: right;">
+                            <button onclick="window.location.href='tambah_buku.php'">Tambah Buku</button>
                         </div>
                         <?php endif; ?>
                     </div>
@@ -130,17 +130,17 @@ mysqli_close($koneksi);
                     <div role="alert" class="contrast">
                         <?php echo $error_message; ?>
                     </div>
-                <?php endif; ?>                <!-- Search form -->                <form method="get" action="list_buku.php">
+                <?php endif; ?>                
+                
+                <!-- Search form -->                
+                <form method="get" action="list_buku.php">
                     <div class="grid">
                         <div>
                             <input type="search" name="search" placeholder="Cari judul, pengarang atau genre..." value="<?php echo !empty($search) ? sanitize($search) : ''; ?>">
                         </div>
                         <div>
-                            <div role="group">
-                                <button type="submit"><i class="bi bi-search"></i> Cari</button>
-                                <?php if (!empty($search)): ?>
-                                    <a href="list_buku.php" role="button" class="secondary outline"><i class="bi bi-x-lg"></i> Reset</a>
-                                <?php endif; ?>
+                            <div>
+                                <button type="submit">Cari</button>
                             </div>
                         </div>
                     </div>
@@ -148,13 +148,13 @@ mysqli_close($koneksi);
 
                 <!-- Books table -->
                 <figure>
-                    <table role="grid">
+                    <table role="grid" class="responsive-table">
                         <thead>
                             <tr>
                                 <th scope="col">Judul</th>
                                 <th scope="col">Pengarang</th>
-                                <th scope="col">Penerbit</th>
-                                <th scope="col">Tahun Terbit</th>
+                                <th class="mobile-hide" scope="col">Penerbit</th>
+                                <th class="mobile-hide" scope="col">Tahun Terbit</th>
                                 <th scope="col">Genre</th>
                                 <th scope="col">Stok</th>
                                 <?php if ($role === 'admin'): ?>
@@ -168,8 +168,8 @@ mysqli_close($koneksi);
                                 <tr>
                                     <td><?php echo sanitize($book['judul']); ?></td>
                                     <td><?php echo sanitize($book['pengarang']); ?></td>
-                                    <td><?php echo sanitize($book['penerbit']); ?></td>
-                                    <td><?php echo sanitize($book['tahun_terbit']); ?></td>
+                                    <td class="mobile-hide"><?php echo sanitize($book['penerbit']); ?></td>
+                                    <td class="mobile-hide"><?php echo sanitize($book['tahun_terbit']); ?></td>
                                     <td><?php echo sanitize($book['genre']); ?></td>
                                     <td>
                                         <?php if ($book['stok'] > 2): ?>
@@ -179,16 +179,16 @@ mysqli_close($koneksi);
                                         <?php else: ?>
                                             <mark class="contrast">Habis</mark>
                                         <?php endif; ?>
-                                    </td>                                    <?php if ($role === 'admin'): ?>                    <td>
-                                        <div role="group">
-                                            <a href="edit_buku.php?id=<?php echo $book['id']; ?>" role="button" class="secondary outline small"><i class="bi bi-pencil-square"></i> Edit</a>
-                                            <button type="button" class="contrast outline small" 
-                                                    onclick="if(confirm('Yakin ingin menghapus buku: <?php echo addslashes(sanitize($book['judul'])); ?>?')) {
-                                                        document.getElementById('delete-form-<?php echo $book['id']; ?>').submit();
-                                                    }">
-                                                <i class="bi bi-trash-fill"></i> Hapus
-                                            </button>
-                                        </div>
+                                    </td>                                    
+                                    <?php if ($role === 'admin'): ?>                    
+                                    <td>
+                                        <a href="edit_buku.php?id=<?php echo $book['id']; ?>" role="button" class="secondary outline small">Edit</a>
+                                        <button type="button" class="contrast outline small" 
+                                                onclick="if(confirm('Yakin ingin menghapus buku: <?php echo addslashes(sanitize($book['judul'])); ?>?')) {
+                                                    document.getElementById('delete-form-<?php echo $book['id']; ?>').submit();
+                                                }">
+                                            Hapus
+                                        </button>
                                         <form id="delete-form-<?php echo $book['id']; ?>" action="hapus_buku.php" method="post" style="display:none;">
                                             <input type="hidden" name="book_id" value="<?php echo $book['id']; ?>">
                                         </form>
@@ -204,6 +204,12 @@ mysqli_close($koneksi);
                         </tbody>
                     </table>
                 </figure>
+
+                <?php if (!empty($search)): ?>
+                    <div style="margin-bottom: var(--pico-spacing); text-align: center;">
+                        <a href="list_buku.php" role="button" class="secondary outline">Reset Pencarian</a>
+                    </div>
+                <?php endif; ?>
 
                 <!-- Pagination Links -->
                 <?php if ($total_pages > 1): ?>
