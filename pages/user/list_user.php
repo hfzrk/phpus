@@ -4,7 +4,7 @@ check_login('admin');
 
 $role = $_SESSION['role'];
 
-$sql = "SELECT id, username, role FROM users ORDER BY username ASC";
+$sql = "SELECT id, username, nama_lengkap, role FROM users ORDER BY username ASC";
 $result = mysqli_query($koneksi, $sql);
 
 if ($result) {
@@ -76,6 +76,7 @@ $error_message = isset($_GET['error']) ? sanitize($_GET['error']) : '';
                             <tr>
                                 <th scope="col">ID</th>
                                 <th scope="col">Username</th>
+                                <th scope="col">Nama Lengkap</th>
                                 <th scope="col">Role</th>
                                 <th scope="col">Aksi</th>
                             </tr>
@@ -86,6 +87,7 @@ $error_message = isset($_GET['error']) ? sanitize($_GET['error']) : '';
                                 <tr>
                                     <td><?php echo sanitize($user['id']); ?></td>
                                     <td><?php echo sanitize($user['username']); ?></td>
+                                    <td><?php echo sanitize($user['nama_lengkap']); ?></td>
                                     <td>
                                         <?php if ($user['role'] === 'admin'): ?>
                                             <mark class="tertiary">Admin</mark>
@@ -114,7 +116,7 @@ $error_message = isset($_GET['error']) ? sanitize($_GET['error']) : '';
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="4" class="center">Tidak ada user ditemukan.</td>
+                                    <td colspan="5" class="center">Tidak ada user ditemukan.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
@@ -124,5 +126,4 @@ $error_message = isset($_GET['error']) ? sanitize($_GET['error']) : '';
         </main>
     </div>
 </body>
-</html>
 </html>

@@ -8,6 +8,7 @@ USE phpus;
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(50) NOT NULL UNIQUE,
+  nama_lengkap VARCHAR(100) NOT NULL,
   password VARCHAR(255) NOT NULL,
   role ENUM('admin', 'user') NOT NULL
 );
@@ -23,11 +24,10 @@ CREATE TABLE buku (
   stok INT NOT NULL
 );
 
--- Password yang baru: admin123 dan user123 (dalam bentuk plain text)
-INSERT INTO users (username, password, role) VALUES
-('admin', 'admin123', 'admin'),
-('user1', 'user123', 'user');
-
+-- Insert with proper nama_lengkap values and hashed passwords
+INSERT INTO users (username, nama_lengkap, password, role) VALUES
+('admin', 'Administrator Sistem', 'admin123', 'admin'), -- Replace with actual hashed password
+('user1', 'User Contoh', 'user123', 'user'); -- Replace with actual hashed password
 
 -- Tabel peminjaman
 CREATE TABLE IF NOT EXISTS peminjaman (
@@ -40,3 +40,4 @@ CREATE TABLE IF NOT EXISTS peminjaman (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (buku_id) REFERENCES buku(id)
 );
+

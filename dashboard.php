@@ -2,8 +2,24 @@
 require_once 'config/koneksi.php';
 check_login();
 
+$user_id = $_SESSION['user_id'];
 $username = sanitize($_SESSION['username']);
 $role = sanitize($_SESSION['role']);
+$nama_lengkap = '';
+
+// Fetch nama_lengkap for the welcome message
+$sql_user = "SELECT nama_lengkap FROM users WHERE id = ?";
+if ($stmt_user = mysqli_prepare($koneksi, $sql_user)) {
+    mysqli_stmt_bind_param($stmt_user, "i", $user_id);
+    mysqli_stmt_execute($stmt_user);
+    $result_user = mysqli_stmt_get_result($stmt_user);
+    if ($user_data = mysqli_fetch_assoc($result_user)) {
+        $nama_lengkap = sanitize($user_data['nama_lengkap']);
+    }
+    mysqli_stmt_close($stmt_user);
+}
+// Fallback to username if nama_lengkap is empty
+$display_name = !empty($nama_lengkap) ? $nama_lengkap : $username;
 
 $error_message = '';
 if (isset($_GET['error'])) {
@@ -113,7 +129,7 @@ if ($role === 'user') {
             <article>
                 <header>
                     <div class="grid">
-                        <h2>Selamat Datang, <?php echo $username; ?> (<?php echo ucfirst($role); ?>)</h2>
+                        <h2>Selamat Datang, <?php echo $display_name; ?></h2>
                     </div>
                     <hr>
                 </header>
