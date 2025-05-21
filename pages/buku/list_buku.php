@@ -157,6 +157,7 @@ mysqli_close($koneksi);
                                 <th class="mobile-hide" scope="col">Tahun Terbit</th>
                                 <th scope="col">Genre</th>
                                 <th scope="col">Stok</th>
+                                <th scope="col">Gambar</th>
                                 <?php if ($role === 'admin'): ?>
                                 <th scope="col">Aksi</th>
                                 <?php endif; ?>
@@ -180,6 +181,11 @@ mysqli_close($koneksi);
                                             <mark class="contrast">Habis</mark>
                                         <?php endif; ?>
                                     </td>                                    
+                                    <td>
+                                        <img src="../../<?php echo htmlspecialchars($book['gambar_path']); ?>" 
+                                             alt="Cover <?php echo htmlspecialchars($book['judul']); ?>"
+                                             style="width: 50px; height: auto;">
+                                    </td>
                                     <?php if ($role === 'admin'): ?>                    
                                     <td>
                                         <a href="edit_buku.php?id=<?php echo $book['id']; ?>" role="button" class="secondary outline small">Edit</a>
@@ -198,7 +204,7 @@ mysqli_close($koneksi);
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="<?php echo ($role === 'admin') ? '7' : '6'; ?>" class="center">Tidak ada buku ditemukan<?php echo !empty($search) ? ' untuk pencarian \'' . sanitize($search) . '\'' : ''; ?>.</td>
+                                    <td colspan="<?php echo ($role === 'admin') ? '8' : '7'; ?>" class="center">Tidak ada buku ditemukan<?php echo !empty($search) ? ' untuk pencarian \'' . sanitize($search) . '\'' : ''; ?>.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>

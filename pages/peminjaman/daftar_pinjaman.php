@@ -50,7 +50,7 @@ $offset = ($current_page - 1) * $limit;
 $offset = max(0, $offset);
 
 // Fetch borrowed books for the current page
-$sql = "SELECT p.*, b.judul, b.pengarang, b.genre,
+$sql = "SELECT p.*, b.judul, b.pengarang, b.genre, b.gambar_path,
         DATEDIFF(p.tanggal_kembali, CURDATE()) as days_remaining
         FROM peminjaman p 
         LEFT JOIN buku b ON p.buku_id = b.id 

@@ -4,21 +4,27 @@ check_login('admin');
 
 $role = $_SESSION['role'];
 
-$username = $password = $user_role = '';
+$username = $nama_lengkap = $user_role = '';
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = trim($_POST['username']);
+    $nama_lengkap = trim($_POST['nama_lengkap']);
     $password = trim($_POST['password']);
+    $confirm_password = trim($_POST['confirm_password']);
     $user_role = trim($_POST['role']);
 
     if (empty($username)) $errors[] = "Username wajib diisi.";
     elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
         $errors[] = "Username hanya boleh berisi huruf, angka, dan underscore.";
     }
+    if (empty($nama_lengkap)) $errors[] = "Nama Lengkap wajib diisi.";
     if (empty($password)) $errors[] = "Password wajib diisi.";
     elseif (strlen($password) < 6) {
         $errors[] = "Password minimal harus 6 karakter.";
+    }
+    if ($password !== $confirm_password) {
+        $errors[] = "Konfirmasi password tidak sesuai.";
     }
     if (empty($user_role)) $errors[] = "Role wajib dipilih.";
     elseif ($user_role !== 'admin' && $user_role !== 'user') {
@@ -41,18 +47,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // Add user if no errors
     if (empty($errors)) {
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        $sql = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
-
+        
+        $sql = "INSERT INTO users (username, nama_lengkap, password, role) VALUES (?, ?, ?, ?)";
         if ($stmt = mysqli_prepare($koneksi, $sql)) {
-            mysqli_stmt_bind_param($stmt, "sss", $username, $hashed_password, $user_role);
-
+            mysqli_stmt_bind_param($stmt, "ssss", $username, $nama_lengkap, $hashed_password, $user_role);
+            
             if (mysqli_stmt_execute($stmt)) {
                 mysqli_stmt_close($stmt);
                 mysqli_close($koneksi);
-                header("Location: list_user.php?success=User berhasil ditambahkan.");
+                header("Location: list_user.php?success=User baru berhasil ditambahkan.");
                 exit();
             } else {
                 $errors[] = "Gagal menambahkan user: " . mysqli_stmt_error($stmt);
@@ -72,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tambah User - Phpus</title>
     <link rel="stylesheet" href="../../css/pico.css">
+    <link rel="stylesheet" href="../../css/custom.css">
 </head>
 <body>
     <div class="container">
@@ -84,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <li><a href="../../dashboard.php">Dashboard</a></li>
                 <li><a href="../buku/list_buku.php">Buku</a></li>
                 <?php if ($role === 'admin'): ?>
-                <li><a href="list_user.php">User</a></li>
+                <li><a href="list_user.php" aria-current="page">User</a></li>
                 <?php endif; ?>
                 <li><a href="../../logout.php">Logout</a></li>
             </ul>
@@ -114,15 +120,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <input type="text" id="username" name="username" value="<?php echo sanitize($username); ?>" required>
                     </label>
 
+                    <label for="nama_lengkap">
+                        Nama Lengkap
+                        <input type="text" id="nama_lengkap" name="nama_lengkap" value="<?php echo sanitize($nama_lengkap); ?>" required>
+                    </label>
+
                     <label for="password">
                         Password
                         <input type="password" id="password" name="password" required>
+                        <small>Minimal 6 karakter</small>
+                    </label>
+
+                    <label for="confirm_password">
+                        Konfirmasi Password
+                        <input type="password" id="confirm_password" name="confirm_password" required>
                     </label>
 
                     <label for="role">
                         Role
                         <select id="role" name="role" required>
-                            <option value="" selected disabled>Pilih Role</option>
+                            <option value="">-- Pilih Role --</option>
                             <option value="admin" <?php echo ($user_role === 'admin') ? 'selected' : ''; ?>>Admin</option>
                             <option value="user" <?php echo ($user_role === 'user') ? 'selected' : ''; ?>>User</option>
                         </select>
@@ -137,6 +154,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </main>
     </div>
 </body>
-</html>
-</html>
 </html>

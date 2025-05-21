@@ -31,10 +31,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (empty($errors)) {
-        $sql = "INSERT INTO buku (judul, pengarang, penerbit, tahun_terbit, genre, stok) VALUES (?, ?, ?, ?, ?, ?)";
+        // Handle image upload
+        $gambar_path = 'images/default_book.jpg'; // Default image
+        
+        if(isset($_FILES['gambar']) && $_FILES['gambar']['error'] == 0) {
+            $upload_dir = '../../images/';
+            
+            // Create directory if it doesn't exist
+            if (!file_exists($upload_dir)) {
+                mkdir($upload_dir, 0777, true);
+            }
+            
+            $file_name = time() . '_' . basename($_FILES['gambar']['name']);
+            $target_path = $upload_dir . $file_name;
+            
+            if(move_uploaded_file($_FILES['gambar']['tmp_name'], $target_path)) {
+                $gambar_path = 'images/' . $file_name;
+            }
+        }
+        
+        $sql = "INSERT INTO buku (judul, pengarang, penerbit, tahun_terbit, genre, stok, gambar_path) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         if ($stmt = mysqli_prepare($koneksi, $sql)) {
-            mysqli_stmt_bind_param($stmt, "sssssi", $judul, $pengarang, $penerbit, $tahun_terbit, $genre, $stok);
+            mysqli_stmt_bind_param($stmt, "sssssis", $judul, $pengarang, $penerbit, $tahun_terbit, $genre, $stok, $gambar_path);
 
             if (mysqli_stmt_execute($stmt)) {
                 mysqli_stmt_close($stmt);
@@ -51,7 +70,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     mysqli_close($koneksi);
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="id" data-theme="dark">
@@ -60,6 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tambah Buku - Phpus</title>
     <link rel="stylesheet" href="../../css/pico.css">
+    <link rel="stylesheet" href="../../css/custom.css">
 </head>
 <body>
     <div class="container">
@@ -96,9 +115,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 <?php endif; ?>
 
-                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
                     <label for="judul">
-                        Judul Buku
+                        Judul
                         <input type="text" id="judul" name="judul" value="<?php echo sanitize($judul); ?>" required>
                     </label>
 
@@ -117,6 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             Tahun Terbit
                             <input type="number" id="tahun_terbit" name="tahun_terbit" placeholder="YYYY" pattern="\d{4}" value="<?php echo sanitize($tahun_terbit); ?>" required>
                         </label>
+                        
                         <label for="genre">
                             Genre
                             <input type="text" id="genre" name="genre" value="<?php echo sanitize($genre); ?>" required>
@@ -126,6 +146,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <label for="stok">
                         Stok
                         <input type="number" id="stok" name="stok" min="0" value="<?php echo sanitize($stok); ?>" required>
+                    </label>
+
+                    <label for="gambar">
+                        Gambar Sampul
+                        <input type="file" id="gambar" name="gambar" accept="image/*">
+                        <small>Upload gambar sampul buku (opsional)</small>
                     </label>
 
                     <div class="grid">

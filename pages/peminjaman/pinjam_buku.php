@@ -167,56 +167,28 @@ mysqli_close($koneksi);
                     </div>
                 </form>
 
-                <figure>
-                    <table role="grid" class="responsive-table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Judul</th>
-                                <th scope="col">Pengarang</th>
-                                <th class="mobile-hide" scope="col">Penerbit</th>
-                                <th class="mobile-hide" scope="col">Tahun Terbit</th>
-                                <th scope="col">Genre</th>
-                                <th scope="col">Stok</th>
-                                <th scope="col">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (count($books) > 0): ?>
-                                <?php foreach ($books as $book): ?>
-                                <tr>
-                                    <td><?php echo sanitize($book['judul']); ?></td>
-                                    <td><?php echo sanitize($book['pengarang']); ?></td>
-                                    <td class="mobile-hide"><?php echo sanitize($book['penerbit']); ?></td>
-                                    <td class="mobile-hide"><?php echo sanitize($book['tahun_terbit']); ?></td>
-                                    <td><?php echo sanitize($book['genre']); ?></td>
-                                    <td>
-                                        <?php if ($book['stok'] > 2): ?>
-                                            <mark class="tertiary"><?php echo sanitize($book['stok']); ?></mark>
-                                        <?php elseif ($book['stok'] > 0): ?>
-                                            <mark class="secondary"><?php echo sanitize($book['stok']); ?></mark>
-                                        <?php else: ?>
-                                            <mark class="contrast">Habis</mark>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <?php if ($book['stok'] > 0): ?>
-                                            <a href="proses_pinjam.php?id=<?php echo $book['id']; ?>" role="button" class="outline small" onclick="return confirm('Yakin ingin meminjam buku <?php echo addslashes(sanitize($book['judul'])); ?>?');">
-                                                Pinjam
-                                            </a>
-                                        <?php else: ?>
-                                            <button disabled class="outline small">Habis</button>
-                                        <?php endif; ?>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <tr>
-                                    <td colspan="7" class="center">Tidak ada buku tersedia<?php echo !empty($search) ? ' untuk pencarian \'' . sanitize($search) . '\'' : ''; ?>.</td>
-                                </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                </figure>
+                <div class="book-grid">
+                    <?php if (count($books) > 0): ?>
+                        <?php foreach ($books as $book): ?>
+                        <div class="book-card">
+                            <img src="../../<?php echo htmlspecialchars($book['gambar_path']); ?>" 
+                                 alt="Cover <?php echo htmlspecialchars($book['judul']); ?>"
+                                 class="book-cover">
+                            <div class="book-details">
+                                <h3><?php echo htmlspecialchars($book['judul']); ?></h3>
+                                <p><strong>Pengarang:</strong> <?php echo htmlspecialchars($book['pengarang']); ?></p>
+                                <p><strong>Penerbit:</strong> <?php echo htmlspecialchars($book['penerbit']); ?></p>
+                                <p><strong>Tahun:</strong> <?php echo htmlspecialchars($book['tahun_terbit']); ?></p>
+                                <p><strong>Genre:</strong> <?php echo htmlspecialchars($book['genre']); ?></p>
+                                <p><strong>Stok:</strong> <?php echo htmlspecialchars($book['stok']); ?></p>
+                                <a href="proses_pinjam.php?id=<?php echo $book['id']; ?>" class="button">Pinjam Buku</a>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="center">Tidak ada buku tersedia<?php echo !empty($search) ? ' untuk pencarian \'' . sanitize($search) . '\'' : ''; ?>.</div>
+                    <?php endif; ?>
+                </div>
 
                 <!-- Pagination Links -->
                 <?php if ($total_pages > 1): ?>
@@ -276,5 +248,51 @@ mysqli_close($koneksi);
             </article>
         </main>
     </div>
+
+    <style>
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .book-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .book-cover {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .book-details {
+            padding: 15px;
+        }
+        
+        .book-details h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        
+        .book-details p {
+            margin: 5px 0;
+        }
+        
+        .button {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+    </style>
 </body>
 </html>

@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             mysqli_stmt_execute($stmt_check);
             mysqli_stmt_store_result($stmt_check);
             if (mysqli_stmt_num_rows($stmt_check) > 0) {
-                $errors[] = "Username baru sudah digunakan.";
+                $errors[] = "Username sudah digunakan oleh pengguna lain.";
             }
             mysqli_stmt_close($stmt_check);
         } else {
@@ -74,13 +74,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($errors)) {
         if (empty($new_password)) {
             $sql_update = "UPDATE users SET username = ?, nama_lengkap = ?, role = ? WHERE id = ?";
-            
             if ($stmt_update = mysqli_prepare($koneksi, $sql_update)) {
                 mysqli_stmt_bind_param($stmt_update, "sssi", $new_username, $new_nama_lengkap, $new_role, $user_id);
-                
                 if (mysqli_stmt_execute($stmt_update)) {
                     mysqli_stmt_close($stmt_update);
-                    mysqli_close($koneksi);
                     header("Location: list_user.php?success=User berhasil diperbarui.");
                     exit();
                 } else {
@@ -93,13 +90,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
             $sql_update = "UPDATE users SET username = ?, nama_lengkap = ?, password = ?, role = ? WHERE id = ?";
-            
             if ($stmt_update = mysqli_prepare($koneksi, $sql_update)) {
                 mysqli_stmt_bind_param($stmt_update, "ssssi", $new_username, $new_nama_lengkap, $hashed_password, $new_role, $user_id);
-                
                 if (mysqli_stmt_execute($stmt_update)) {
                     mysqli_stmt_close($stmt_update);
-                    mysqli_close($koneksi);
                     header("Location: list_user.php?success=User berhasil diperbarui.");
                     exit();
                 } else {
@@ -111,7 +105,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
     }
-    mysqli_close($koneksi);
 }
 ?>
 <!DOCTYPE html>
@@ -121,6 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit User - Phpus</title>
     <link rel="stylesheet" href="../../css/pico.css">
+    <link rel="stylesheet" href="../../css/custom.css">
 </head>
 <body>
     <div class="container">
@@ -133,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <li><a href="../../dashboard.php">Dashboard</a></li>
                 <li><a href="../buku/list_buku.php">Buku</a></li>
                 <?php if ($role === 'admin'): ?>
-                <li><a href="list_user.php">User</a></li>
+                <li><a href="list_user.php" aria-current="page">User</a></li>
                 <?php endif; ?>
                 <li><a href="../../logout.php">Logout</a></li>
             </ul>
@@ -171,13 +165,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </label>
 
                     <label for="password">
-                        Password <?php if ($user_id != $_SESSION['user_id']): ?>(Kosongkan jika tidak ingin mengubah)<?php endif; ?>
-                        <input type="password" id="password" name="password" <?php if ($user_id == $_SESSION['user_id']): ?>required<?php endif; ?>>
+                        Password Baru
+                        <input type="password" id="password" name="password" placeholder="Kosongkan jika tidak ingin mengubah password">
+                        <small>Minimal 6 karakter. Kosongkan jika tidak ingin mengubah password.</small>
                     </label>
 
                     <label for="role">
                         Role
                         <select id="role" name="role" required>
+                            <option value="">-- Pilih Role --</option>
                             <option value="admin" <?php echo ($user_role === 'admin') ? 'selected' : ''; ?>>Admin</option>
                             <option value="user" <?php echo ($user_role === 'user') ? 'selected' : ''; ?>>User</option>
                         </select>
@@ -189,6 +185,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 </form>
             </article>
+        </main>
+    </div>
+</body>
+</html>
         </main>
     </div>
 </body>
