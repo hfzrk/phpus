@@ -9,22 +9,36 @@ if ($book_id <= 0) {
     exit();
 }
 
-// Check if the book is currently being borrowed
-$check_sql = "SELECT COUNT(*) as loan_count FROM peminjaman WHERE buku_id = ? AND status = 'dipinjam'";
-$has_active_loans = false;
+// Check if the book has ANY references in the peminjaman table
+$check_sql = "SELECT COUNT(*) as loan_count FROM peminjaman WHERE buku_id = ?";
+$has_references = false;
 
 if ($check_stmt = mysqli_prepare($koneksi, $check_sql)) {
     mysqli_stmt_bind_param($check_stmt, "i", $book_id);
     mysqli_stmt_execute($check_stmt);
     $result = mysqli_stmt_get_result($check_stmt);
     $loan_row = mysqli_fetch_assoc($result);
-    $has_active_loans = ($loan_row['loan_count'] > 0);
+    $has_references = ($loan_row['loan_count'] > 0);
     mysqli_stmt_close($check_stmt);
 }
 
-if ($has_active_loans) {
-    header("Location: list_buku.php?error=Buku tidak dapat dihapus karena sedang dipinjam oleh pengguna.");
-    exit();
+if ($has_references) {
+    // Option 1: Just prevent deletion
+    // header("Location: list_buku.php?error=Buku tidak dapat dihapus karena memiliki riwayat peminjaman. Hapus riwayat peminjaman terlebih dahulu.");
+    // exit();
+    
+    // Option 2: Delete all associated loan records first (uncomment if you want this behavior instead)
+    
+    $delete_loans_sql = "DELETE FROM peminjaman WHERE buku_id = ?";
+    if ($delete_loans_stmt = mysqli_prepare($koneksi, $delete_loans_sql)) {
+        mysqli_stmt_bind_param($delete_loans_stmt, "i", $book_id);
+        if (!mysqli_stmt_execute($delete_loans_stmt)) {
+            header("Location: list_buku.php?error=Gagal menghapus riwayat peminjaman: " . mysqli_stmt_error($delete_loans_stmt));
+            exit();
+        }
+        mysqli_stmt_close($delete_loans_stmt);
+    }
+    
 }
 
 $sql = "DELETE FROM buku WHERE id = ?";

@@ -105,50 +105,62 @@ if (isset($_GET['error'])) {
     <title>Login - Phpus</title>
     <link rel="stylesheet" href="css/pico.css">
     <link rel="stylesheet" href="css/bootstrap-icons.css">
-    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="css/custom.css">    
+    <style>
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+
+        }
+        .login-form {
+            width: 100%;
+            max-width: max-content;
+            margin: 0 auto;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.15); /* Lighter form background */
+            backdrop-filter: blur(10px); /* Creates a frosted glass effect */
+        }
+        .login-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        /* Add a subtle glow effect */
+        .login-form {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
 </head>
 <body>
-    <!-- Using Pico's grid layout for the login page -->
-    <main class="container">
-        <article class="grid">
-            <div>
-                <hgroup>
-                    <h1>Phpus</h1>
-                    <h2>Silahkan Login</h2>
-                </hgroup>
-
-                <?php if (!empty($error)): ?>
-                    <div role="alert" class="contrast">
-                        <?php echo $error; ?>
-                    </div>
-                <?php endif; ?>
-
-                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-                    <label for="username">
-                        Username
-                        <input type="text" id="username" name="username" placeholder="Username" required autofocus>
-                    </label>
-                    
-                    <label for="password">
-                        Password
-                        <input type="password" id="password" name="password" placeholder="Password" required>
-                    </label>
-                    
-                    <button type="submit">LOGIN</button>
-                </form>
+    <main class="container login-container">
+        <div class="login-form">
+            <div class="login-header">
+                <h1>Sistem Phpus</h1>
             </div>
-            
-            <div>
-                <article>
-                    <h3>Selamat Datang di Phpus</h3>
-                    <p>Sistem informasi perpustakaan untuk pengelolaan buku dan peminjaman yang efisien dan mudah digunakan.</p>
-                </article>
-            </div>
-        </article>
-        
-        <footer>
-            <small>&copy; Phpus <?php echo date("Y"); ?></small>
-        </footer>
+
+            <?php if (!empty($error)): ?>
+                <div role="alert" class="contrast">
+                    <?php echo $error; ?>
+                </div>
+            <?php endif; ?>
+
+            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                <label for="username">
+                    Username
+                    <input type="text" id="username" name="username" placeholder="Username" required autofocus>
+                </label>
+                
+                <label for="password">
+                    Password
+                    <input type="password" id="password" name="password" placeholder="Password" required>
+                </label>
+                
+                <button type="submit">LOGIN</button>
+            </form>
+        </div>
     </main>
 </body>
 </html>
