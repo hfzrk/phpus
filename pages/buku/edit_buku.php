@@ -230,12 +230,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 </body>
 </html>
-                        <button type="button" class="secondary" onclick="window.location.href='list_buku.php'">Batal</button>
-                    </div>
-                </form>
-            </article>
-        </main>
-    </div>
-</body>
-</html>
 

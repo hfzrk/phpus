@@ -23,12 +23,6 @@ if ($check_stmt = mysqli_prepare($koneksi, $check_sql)) {
 }
 
 if ($has_references) {
-    // Option 1: Just prevent deletion
-    // header("Location: list_buku.php?error=Buku tidak dapat dihapus karena memiliki riwayat peminjaman. Hapus riwayat peminjaman terlebih dahulu.");
-    // exit();
-    
-    // Option 2: Delete all associated loan records first (uncomment if you want this behavior instead)
-    
     $delete_loans_sql = "DELETE FROM peminjaman WHERE buku_id = ?";
     if ($delete_loans_stmt = mysqli_prepare($koneksi, $delete_loans_sql)) {
         mysqli_stmt_bind_param($delete_loans_stmt, "i", $book_id);

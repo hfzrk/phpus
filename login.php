@@ -104,7 +104,6 @@ if (isset($_GET['error'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Phpus</title>
     <link rel="stylesheet" href="css/pico.css">
-    <link rel="stylesheet" href="css/bootstrap-icons.css">
     <link rel="stylesheet" href="css/custom.css">    
     <style>
         .login-container {
