@@ -22,13 +22,13 @@ CREATE TABLE buku (
   tahun_terbit INT NOT NULL DEFAULT 2000,
   genre VARCHAR(100) NOT NULL,
   stok INT NOT NULL,
-  gambar_path VARCHAR(255) DEFAULT 'images/default_book.jpg'
+  gambar_path VARCHAR(255)
 );
 
 -- Insert with proper nama_lengkap values and hashed passwords
 INSERT INTO users (username, nama_lengkap, password, role) VALUES
-('admin', 'Administrator Sistem', 'admin123', 'admin'), -- Replace with actual hashed password
-('user1', 'User Contoh', 'user123', 'user'); -- Replace with actual hashed password
+('admin', 'Administrator Sistem', 'admin', 'admin'), -- Replace with actual hashed password
+('user', 'User Contoh', 'user', 'user'); -- Replace with actual hashed password
 
 -- Tabel peminjaman
 CREATE TABLE IF NOT EXISTS peminjaman (
