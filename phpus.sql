@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS peminjaman (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (buku_id) REFERENCES buku(id)
 );
-
+-- hello
 -- ONLY RUN THIS IF YOU'RE UPDATING AN EXISTING DATABASE WITHOUT THE gambar_path COLUMN
 -- ALTER TABLE buku ADD COLUMN gambar_path VARCHAR(255) DEFAULT 'images/default_book.jpg';
 
